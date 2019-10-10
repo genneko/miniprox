@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# $FreeBSD$
+#
+# PROVIDE: miniprox
+# REQUIRE: DAEMON
+# KEYWORD: FreeBSD
+#
+# Add the following line to /etc/rc.conf to enable miniprox:
+#
+# miniprox_enable="YES"
+#
+ 
+miniprox_enable=${miniprox_enable:-"NO"}
+
+. /etc/rc.subr
+ 
+name="miniprox"
+rcvar=`set_rcvar`
+pidfile="/var/run/${name}.pid"
+cfgfile="/usr/local/etc/${name}.json"
+command="/usr/sbin/daemon"
+command_args="-r -S -P ${pidfile} -T ${name} /usr/local/sbin/${name}"
+start_cmd="miniprox_start"
+ 
+miniprox_start(){
+	if [ -f "$cfgfile" ]; then
+		echo -n "Starting $name"
+		$command $command_args
+		echo "."
+	else
+		warn "Cannot find $cfgfile."
+		return 1
+	fi
+}
+
+load_rc_config ${name}
+run_rc_command "$1"
+

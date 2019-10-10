@@ -1,0 +1,40 @@
+#!/usr/local/bin/perl
+#
+# miniprox - a simple tcp proxy
+#
+# prerequisites
+# - Net::Proxy with custom patch (IPv6 and libwrap support)
+# - Authen::Libwrap (required by the custom Net::Proxy)
+#
+use strict;
+use Net::Proxy;
+use JSON::PP;
+use FindBin qw($Bin $Script);
+use Getopt::Long qw(:config posix_default no_ignore_case gnu_compat);
+# Enable short option bundling like -avo.
+Getopt::Long::Configure("bundling");
+
+my $config;
+GetOptions(
+    "config|c=s" => \$config
+);
+$config = "/usr/local/etc/$Script.json" unless $config;
+
+open my $fh, '<', $config or die "Cannot open config file '$config': $!";
+my $json = do { local $/; <$fh> };
+close $fh;
+
+my $connlist = decode_json($json);
+my $index = 0;
+my @proxylist;
+
+for my $conn (@$connlist){
+    $conn->{in}->{type} = 'tcp';
+    $conn->{out}->{type} = 'tcp';
+	$proxylist[$index] = Net::Proxy->new($conn);
+	$proxylist[$index]->register();
+	$proxylist[$index]->set_verbosity(1);
+	$index++;
+}
+
+Net::Proxy->mainloop();

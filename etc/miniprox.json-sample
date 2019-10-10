@@ -1,0 +1,46 @@
+[
+  {
+    "in": {
+      "host": "172.31.0.2",
+      "port": "5222",
+      "progname": "openfire"
+    },
+    "out": {
+      "host": "172.31.1.2",
+      "port": "5222"
+    }
+  },
+  {
+    "in": {
+      "host": "fd00:1:1:0::2",
+      "port": "5222",
+      "progname": "openfire"
+    },
+    "out": {
+      "host": "fd00:1:1:1::2",
+      "port": "5222"
+    }
+  },
+  {
+    "in": {
+      "host": "172.31.0.2",
+      "port": "4041",
+      "progname": "subsonic"
+    },
+    "out": {
+      "host": "172.31.1.3",
+      "port": "4041"
+    }
+  },
+  {
+    "in": {
+      "host": "fd00:1:1:0::2",
+      "port": "4041",
+      "progname": "subsonic"
+    },
+    "out": {
+      "host": "fd00:1:1:1::3",
+      "port": "4041"
+    }
+  }
+]
